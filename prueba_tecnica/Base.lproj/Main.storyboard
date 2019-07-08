@@ -324,6 +324,14 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FA7-1S-wUn">
+                                <rect key="frame" x="20" y="398" width="67" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Imágenes"/>
+                                <connections>
+                                    <action selector="showImagesPressed:" destination="56V-46-3kL" eventType="touchUpInside" id="NQW-bd-oTT"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="n2G-Tf-4D1"/>
@@ -333,12 +341,14 @@
                         <outlet property="codeErrorLabel" destination="2UW-g1-9DA" id="ZQS-wT-4Bi"/>
                         <outlet property="codeInput" destination="0Yp-un-i4M" id="t8Z-Q4-BMO"/>
                         <outlet property="descriptionInput" destination="1a1-zK-QBT" id="qLP-3U-JvW"/>
+                        <outlet property="imagesButton" destination="FA7-1S-wUn" id="gaa-kj-q3Q"/>
                         <outlet property="nameErrorLabel" destination="VnP-mc-4NE" id="oUQ-84-gaB"/>
                         <outlet property="nameInput" destination="iia-pc-OOg" id="f3L-gf-bdb"/>
                         <outlet property="saveButton" destination="3bO-H3-g2p" id="LAk-8v-DTb"/>
                         <outlet property="selectedCount" destination="hcl-bE-KQZ" id="ZwN-xb-4lA"/>
                         <outlet property="successLabel" destination="VrK-qs-pE5" id="UKB-ES-FZ1"/>
                         <outlet property="viewNavigationBar" destination="MZN-Ih-DBl" id="Mi0-Q9-etV"/>
+                        <segue destination="FOs-bC-odC" kind="presentation" identifier="ShowImages" modalPresentationStyle="currentContext" id="Ftm-ME-UIS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XNB-fr-5QQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -400,6 +410,56 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ffh-bN-Zmz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4695.652173913044" y="893.97321428571422"/>
+        </scene>
+        <!--Images Collection View Controller-->
+        <scene sceneID="qqB-g0-dXS">
+            <objects>
+                <collectionViewController id="BXU-TY-h0r" customClass="ImagesCollectionViewController" customModule="prueba_tecnica" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="GRO-LA-Tih">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="sHt-Ji-sE3">
+                            <size key="itemSize" width="409" height="305"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCell" id="lRZ-7e-94N" customClass="ImageCollectionViewCell" customModule="prueba_tecnica" customModuleProvider="target">
+                                <rect key="frame" x="2.5" y="0.0" width="409" height="305"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                    <rect key="frame" x="0.0" y="0.0" width="409" height="305"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="82p-EM-0gF">
+                                            <rect key="frame" x="0.0" y="0.0" width="405" height="302"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                    </subviews>
+                                </view>
+                                <connections>
+                                    <outlet property="productImage" destination="82p-EM-0gF" id="piY-Bc-AvH"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="BXU-TY-h0r" id="FIn-Tt-AdK"/>
+                            <outlet property="delegate" destination="BXU-TY-h0r" id="MlL-QZ-cEy"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="0kD-mC-GcF">
+                        <barButtonItem key="rightBarButtonItem" title="Ok" id="3oU-81-93Y">
+                            <connections>
+                                <segue destination="56V-46-3kL" kind="presentation" modalTransitionStyle="crossDissolve" id="D1K-ib-v1z"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Uy4-XS-LB7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5605.7971014492759" y="1655.3571428571429"/>
         </scene>
         <!--Categorias-->
         <scene sceneID="pce-hb-axS">
@@ -730,14 +790,33 @@
             </objects>
             <point key="canvasLocation" x="1890" y="900"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="uhU-rw-2PC">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="FOs-bC-odC" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="e0C-Z3-WEy">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BXU-TY-h0r" kind="relationship" relationship="rootViewController" id="FmK-J2-XiF"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yFD-le-BOT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4695.652173913044" y="1655.3571428571429"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Image" width="320" height="320"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="PUf-a9-Jcr"/>
+        <segue reference="Ftm-ME-UIS"/>
+        <segue reference="fvL-uZ-8cj"/>
         <segue reference="d9l-sb-04G"/>
-        <segue reference="Tps-C0-iel"/>
+        <segue reference="D1K-ib-v1z"/>
         <segue reference="KaM-9L-fLe"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -26,6 +26,8 @@
 		C2A9062222D1006E00FFE288 /* ProductCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A9062122D1006E00FFE288 /* ProductCreateView.swift */; };
 		C2A9062422D11D5A00FFE288 /* ProductCategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A9062322D11D5A00FFE288 /* ProductCategoryTableViewCell.swift */; };
 		C2A9062622D11F0A00FFE288 /* ProductCategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A9062522D11F0A00FFE288 /* ProductCategoryTableViewController.swift */; };
+		C2F836F822D3973B00C75235 /* ImagesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F836F722D3973B00C75235 /* ImagesCollectionViewController.swift */; };
+		C2F836FA22D3AE3900C75235 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F836F922D3AE3900C75235 /* ImageCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +53,8 @@
 		C2A9062122D1006E00FFE288 /* ProductCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCreateView.swift; sourceTree = "<group>"; };
 		C2A9062322D11D5A00FFE288 /* ProductCategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCategoryTableViewCell.swift; sourceTree = "<group>"; };
 		C2A9062522D11F0A00FFE288 /* ProductCategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCategoryTableViewController.swift; sourceTree = "<group>"; };
+		C2F836F722D3973B00C75235 /* ImagesCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCollectionViewController.swift; sourceTree = "<group>"; };
+		C2F836F922D3AE3900C75235 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		DF01936673FED597734CF377 /* Pods-prueba_tecnica.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-prueba_tecnica.release.xcconfig"; path = "Target Support Files/Pods-prueba_tecnica/Pods-prueba_tecnica.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -123,6 +127,8 @@
 				C2A9062122D1006E00FFE288 /* ProductCreateView.swift */,
 				C2A9062322D11D5A00FFE288 /* ProductCategoryTableViewCell.swift */,
 				C2A9062522D11F0A00FFE288 /* ProductCategoryTableViewController.swift */,
+				C2F836F722D3973B00C75235 /* ImagesCollectionViewController.swift */,
+				C2F836F922D3AE3900C75235 /* ImageCollectionViewCell.swift */,
 			);
 			path = prueba_tecnica;
 			sourceTree = "<group>";
@@ -224,6 +230,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2F836FA22D3AE3900C75235 /* ImageCollectionViewCell.swift in Sources */,
+				C2F836F822D3973B00C75235 /* ImagesCollectionViewController.swift in Sources */,
 				C2134F9E22CE9001000865C6 /* CategoryTableView.swift in Sources */,
 				C244DBD022CE593300A04FBA /* ViewController.swift in Sources */,
 				C2A9062622D11F0A00FFE288 /* ProductCategoryTableViewController.swift in Sources */,

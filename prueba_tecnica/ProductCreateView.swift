@@ -23,6 +23,7 @@ class ProductCreateView: UIViewController {
     @IBOutlet weak var categoriesButton: UIButton!
     @IBOutlet weak var codeErrorLabel: UILabel!
     @IBOutlet weak var nameErrorLabel: UILabel!
+    @IBOutlet weak var imagesButton: UIButton!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     var categories = [Category]()
     var product:Product?
@@ -85,6 +86,10 @@ class ProductCreateView: UIViewController {
     }
     
     //MARK: Actions
+    
+    @IBAction func showImagesPressed(_ sender: UIButton) {
+        performSegue(withIdentifier: "ShowImages", sender: self)
+    }
     
     
     @IBAction func savePressed(_ sender: UIBarButtonItem) {
@@ -208,6 +213,18 @@ class ProductCreateView: UIViewController {
                 pcVC.product = product
             }
             pcVC.mode = mode
+        }
+        
+        if segue.identifier == "ShowImages" {
+            
+            guard let nVC = segue.destination as? UINavigationController else{
+                fatalError("error instancia")
+            }
+            //pasamos el producto actual
+            guard let siVC =  nVC.topViewController as? ImagesCollectionViewController else{
+                fatalError("boton pulsado pero la instancia del objetivo no corresponde")
+            }
+            siVC.product = product
         }
     }
     
