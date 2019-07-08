@@ -1,0 +1,6 @@
+module Pods_prueba_tecnica {
+  umbrella header "Pods-prueba_tecnica-umbrella.h"
+
+  export *
+  module * { export * }
+}
