@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 import Alamofire
 
-class ProductCreateView: UIViewController {
-    
+class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     //MARK properties
     @IBOutlet weak var selectedCount: UILabel!
     @IBOutlet weak var nameInput: UITextField!
+    @IBOutlet weak var tarifasTableView: UITableView!
     @IBOutlet weak var codeInput: UITextField!
     @IBOutlet weak var descriptionInput: UITextView!
     @IBOutlet weak var successLabel: UILabel!
@@ -26,35 +26,21 @@ class ProductCreateView: UIViewController {
     @IBOutlet weak var imagesButton: UIButton!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     var categories = [Category]()
+    var tarifas = [Tarifa]()
     var product:Product?
     var selectedCategories = [Int]()
     let def = UserDefaults.standard
     var mode:String?
     
+    
     override func viewDidLoad() {
-        let headers: HTTPHeaders = [
-            "Authorization": def.string(forKey: "token")!
-        ]
-        //hacemos un request para obtener todas las categorias una vez
-        if categories.isEmpty {
-            Alamofire.request("http://genesis.test/api/categorias", method: .get, headers: headers )
-                .validate()
-                .responseJSON{ response in
-                    guard response.error == nil else {
-                        //TODO  error
-                        print("error request: \(response.error!)")
-                        return
-                    }
-                    if let cats = response.result.value as! NSArray? {
-                        for category in cats{
-                            let data = category as! NSDictionary
-                            DispatchQueue.main.async {
-                                self.categories.append(Category(id:data["id"] as! Int, code: data["code"] as! String, name: data["name"] as! String, description: data["description"] as! String))
-                            }
-                        }
-                    }
-            }
-        }
+        
+        //datasource y delegate de l atabla de tarifas
+        self.tarifasTableView.delegate = self
+        self.tarifasTableView.dataSource = self
+        
+        loadAllCategories()
+        loadTarifas()
         
         switch mode {
         case "SHOW":
@@ -95,6 +81,28 @@ class ProductCreateView: UIViewController {
     @IBAction func savePressed(_ sender: UIBarButtonItem) {
         //cambiamos el titulo dependiendo del modo de vista
     }
+    
+    
+    //MARK UITableView
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.tarifas.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "TarifasCell") as? TarifasTableViewCell else{
+            fatalError("celda incorrecta");
+        }
+        
+        cell.tarifa.text = String("\(self.tarifas[indexPath.row].tarifa)€")
+        cell.desde.text = "desde: \(self.tarifas[indexPath.row].desde)"
+        cell.hasta.text = "hasta: \(self.tarifas[indexPath.row].hasta)"
+        
+        
+        return cell;
+    }
+    
+    //MARK: Seguecontrol
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         
@@ -164,33 +172,11 @@ class ProductCreateView: UIViewController {
                 }
                 return false;
             }
-        
+            
             if(button.title == "Editar"){
                 modeEdite()
                 return false
             }
-            
-            /*let headers: HTTPHeaders = [
-                "Authorization": def.string(forKey: "token")!
-            ]
-            
-            let parameters: Parameters = [
-                "code": self.codeInput.text!,
-                "name":  self.nameInput.text!,
-                "description": self.descriptionInput.text!,
-                "categories": self.selectedCategories
-            ]
-            
-            //todo ok, vamos a guardar la categoría en la BD
-            Alamofire.request("http://genesis.test/api/productos", method: .post, parameters: parameters, headers: headers )
-                .validate()
-                .responseJSON{ response in
-                    guard response.error == nil else {
-                        //TODO  error
-                        print(response.error!)
-                        return
-                    }       
-            }*/
         }
         //vamos a la lista de productos creados
         return true
@@ -280,5 +266,63 @@ class ProductCreateView: UIViewController {
         descriptionInput.isEditable = true
     }
     
+    private func loadTarifas(){
+        
+        let headers: HTTPHeaders = [
+            "Authorization": def.string(forKey: "token")!
+        ]
+        //hacemos un request para obtener todas las categorias una vez
+        
+        Alamofire.request("http://genesis.test/api/productos/\(product!.id)/tarifas", method: .get, headers: headers )
+            .validate()
+            .responseJSON{ response in
+                guard response.error == nil else {
+                    //TODO  error
+                    print("error request: \(response.error!)")
+                    return
+                }
+                if let tarifas = response.result.value as! NSArray? {
+                    for tarifa in tarifas{
+                        let data = tarifa as! NSDictionary
+                        DispatchQueue.main.async {
+                            self.tarifas.append(Tarifa(id:data["id"] as! Int, tarifa: data["rate"] as! Int, desde: data["from"] as! String, hasta: data["to"] as! String ))
+                            self.tarifasTableView.reloadData()
+                        }
+                        
+                    }
+                    
+                }
+                
+        }
+        
+        
+    }
     
+    private func loadAllCategories(){
+        let headers: HTTPHeaders = [
+            "Authorization": def.string(forKey: "token")!
+        ]
+        //hacemos un request para obtener todas las categorias una vez
+        if categories.isEmpty {
+            Alamofire.request("http://genesis.test/api/categorias", method: .get, headers: headers )
+                .validate()
+                .responseJSON{ response in
+                    guard response.error == nil else {
+                        //TODO  error
+                        print("error request: \(response.error!)")
+                        return
+                    }
+                    if let cats = response.result.value as! NSArray? {
+                        for category in cats{
+                            let data = category as! NSDictionary
+                            DispatchQueue.main.async {
+                                self.categories.append(Category(id:data["id"] as! Int, code: data["code"] as! String, name: data["name"] as! String, description: data["description"] as! String))
+                            }
+                        }
+                    }
+            }
+        }
+    }
 }
+
+

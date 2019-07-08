@@ -28,6 +28,8 @@
 		C2A9062622D11F0A00FFE288 /* ProductCategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A9062522D11F0A00FFE288 /* ProductCategoryTableViewController.swift */; };
 		C2F836F822D3973B00C75235 /* ImagesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F836F722D3973B00C75235 /* ImagesCollectionViewController.swift */; };
 		C2F836FA22D3AE3900C75235 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F836F922D3AE3900C75235 /* ImageCollectionViewCell.swift */; };
+		C2F836FE22D3BB6900C75235 /* TarifasTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F836FD22D3BB6900C75235 /* TarifasTableViewCell.swift */; };
+		C2F8370422D3C3E300C75235 /* Tarifa.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F8370322D3C3E300C75235 /* Tarifa.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +57,8 @@
 		C2A9062522D11F0A00FFE288 /* ProductCategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCategoryTableViewController.swift; sourceTree = "<group>"; };
 		C2F836F722D3973B00C75235 /* ImagesCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCollectionViewController.swift; sourceTree = "<group>"; };
 		C2F836F922D3AE3900C75235 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		C2F836FD22D3BB6900C75235 /* TarifasTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TarifasTableViewCell.swift; sourceTree = "<group>"; };
+		C2F8370322D3C3E300C75235 /* Tarifa.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tarifa.swift; sourceTree = "<group>"; };
 		DF01936673FED597734CF377 /* Pods-prueba_tecnica.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-prueba_tecnica.release.xcconfig"; path = "Target Support Files/Pods-prueba_tecnica/Pods-prueba_tecnica.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -129,6 +133,8 @@
 				C2A9062522D11F0A00FFE288 /* ProductCategoryTableViewController.swift */,
 				C2F836F722D3973B00C75235 /* ImagesCollectionViewController.swift */,
 				C2F836F922D3AE3900C75235 /* ImageCollectionViewCell.swift */,
+				C2F836FD22D3BB6900C75235 /* TarifasTableViewCell.swift */,
+				C2F8370322D3C3E300C75235 /* Tarifa.swift */,
 			);
 			path = prueba_tecnica;
 			sourceTree = "<group>";
@@ -238,7 +244,9 @@
 				C244DBCE22CE593300A04FBA /* AppDelegate.swift in Sources */,
 				C2134F7A22CE71D3000865C6 /* HomeViewController.swift in Sources */,
 				C2134F9A22CE8E6A000865C6 /* CategoryTableViewCell.swift in Sources */,
+				C2F836FE22D3BB6900C75235 /* TarifasTableViewCell.swift in Sources */,
 				C2A9061922D0BCDF00FFE288 /* CategoryShowView.swift in Sources */,
+				C2F8370422D3C3E300C75235 /* Tarifa.swift in Sources */,
 				C2134FA022CE911A000865C6 /* Category.swift in Sources */,
 				C2A9062222D1006E00FFE288 /* ProductCreateView.swift in Sources */,
 				C2A9061E22D0F52D00FFE288 /* ProductTableViewCell.swift in Sources */,
