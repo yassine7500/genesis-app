@@ -920,7 +920,7 @@
                         <barButtonItem key="leftBarButtonItem" title="Volver" id="XUw-Jl-6Ut">
                             <connections>
                                 <action selector="cancelPressed:" destination="qMv-3v-mfB" id="0Vh-Rk-YT0"/>
-                                <segue destination="56V-46-3kL" kind="presentation" identifier="GoBack" modalTransitionStyle="partialCurl" id="Lyw-VT-aqX"/>
+                                <segue destination="56V-46-3kL" kind="presentation" identifier="GoBack" modalTransitionStyle="crossDissolve" id="Lyw-VT-aqX"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Guardar" id="u8t-qF-kQL">

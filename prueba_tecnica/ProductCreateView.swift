@@ -253,10 +253,14 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
             guard let ctVC = t.topViewController as? TarifaCreateViewController else{
                 fatalError("el top que sigue al nav no es un uiviucontroller")
             }
-            
+            if product == nil || product?.id == 0 {
+                ctVC.product = Product(id: 0, code: codeInput.text!, name: nameInput.text!, description: descriptionInput.text!, thumbnail: nil)
+                print("product is null")
+            }else{
+                ctVC.product = product
+            }
             ctVC.tarifaMode = "CREATE"
             ctVC.tarifas = tarifas
-            ctVC.product = self.product
             ctVC.mode = self.mode
             ctVC.selectedCategories = self.selectedCategories
             
