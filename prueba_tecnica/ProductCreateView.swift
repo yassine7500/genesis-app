@@ -25,6 +25,8 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
     @IBOutlet weak var nameErrorLabel: UILabel!
     @IBOutlet weak var imagesButton: UIButton!
     @IBOutlet weak var saveButton: UIBarButtonItem!
+    @IBOutlet weak var addTarifa: UIButton!
+    
     var categories = [Category]()
     var tarifas = [Tarifa]()
     var product:Product?
@@ -77,9 +79,8 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
         performSegue(withIdentifier: "ShowImages", sender: self)
     }
     
-    
-    @IBAction func savePressed(_ sender: UIBarButtonItem) {
-        //cambiamos el titulo dependiendo del modo de vista
+    @IBAction func addTarifaPressed(_ sender: UIButton) {
+        performSegue(withIdentifier: "CreateTarifa", sender: "Add")
     }
     
     
@@ -95,11 +96,39 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
         }
         
         cell.tarifa.text = String("\(self.tarifas[indexPath.row].tarifa)€")
-        cell.desde.text = "desde: \(self.tarifas[indexPath.row].desde)"
-        cell.hasta.text = "hasta: \(self.tarifas[indexPath.row].hasta)"
+        cell.desde.text = "del: \(self.tarifas[indexPath.row].desde)"
+        cell.hasta.text = "a: \(self.tarifas[indexPath.row].hasta)"
         
         
         return cell;
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        //permitir borrar y editar solo en modo editar
+        if self.mode == "EDIT" {
+            let headers: HTTPHeaders = [
+                "Authorization": def.string(forKey: "token")!
+            ]
+            Alamofire.request("http://genesis.test/api/tarifas/\(tarifas[indexPath.row].id)", method: .delete, headers: headers )
+                .validate()
+                .responseJSON{ response in
+                    guard response.error == nil else {
+                        //TODO  error
+                        print(response.request)
+                        return
+                    }
+                    // Borrar el row de la tabla
+                    self.tarifas.remove(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                    tableView.reloadData()
+            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //editamos la tarifa
+        
     }
     
     //MARK: Seguecontrol
@@ -211,6 +240,26 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
                 fatalError("boton pulsado pero la instancia del objetivo no corresponde")
             }
             siVC.product = product
+            siVC.selectedCategories = self.selectedCategories
+            siVC.mode = self.mode
+            siVC.tarifas = self.tarifas
+        }
+        
+        //preparando segue para crear/editar tarifa
+        if segue.identifier == "CreateTarifa" {
+            guard let t = segue.destination as? UINavigationController else{
+                fatalError("el destino no es un navigarionvc")
+            }
+            guard let ctVC = t.topViewController as? TarifaCreateViewController else{
+                fatalError("el top que sigue al nav no es un uiviucontroller")
+            }
+            
+            ctVC.tarifaMode = "CREATE"
+            ctVC.tarifas = tarifas
+            ctVC.product = self.product
+            ctVC.mode = self.mode
+            ctVC.selectedCategories = self.selectedCategories
+            
         }
     }
     
@@ -222,6 +271,10 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
         nameInput.isEnabled = false
         codeInput.isEnabled = false
         descriptionInput.isEditable = false
+        
+        //quitar boton para añadir tarifa
+        addTarifa.isHidden = true
+        addTarifa.isEnabled = false
         
         //obtenemos las categorias seleccionadas en caso del modo show o edit
         let headers: HTTPHeaders = [
@@ -255,6 +308,10 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
         nameInput.isEnabled = true
         codeInput.isEnabled = true
         descriptionInput.isEditable = true
+        
+        //mostrar boton para añadir tarifa
+        addTarifa.isHidden = false
+        addTarifa.isEnabled = true
     }
     
     public func modeCreate(){
@@ -264,6 +321,10 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
         nameInput.isEnabled = true
         codeInput.isEnabled = true
         descriptionInput.isEditable = true
+        
+        //mostrar boton para añadir tarifa
+        addTarifa.isHidden = false
+        addTarifa.isEnabled = true
     }
     
     private func loadTarifas(){
@@ -273,26 +334,27 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
         ]
         //hacemos un request para obtener todas las categorias una vez
         
-        Alamofire.request("http://genesis.test/api/productos/\(product!.id)/tarifas", method: .get, headers: headers )
-            .validate()
-            .responseJSON{ response in
-                guard response.error == nil else {
-                    //TODO  error
-                    print("error request: \(response.error!)")
-                    return
-                }
-                if let tarifas = response.result.value as! NSArray? {
-                    for tarifa in tarifas{
-                        let data = tarifa as! NSDictionary
-                        DispatchQueue.main.async {
-                            self.tarifas.append(Tarifa(id:data["id"] as! Int, tarifa: data["rate"] as! Int, desde: data["from"] as! String, hasta: data["to"] as! String ))
-                            self.tarifasTableView.reloadData()
+        if product != nil{
+            Alamofire.request("http://genesis.test/api/productos/\(product!.id)/tarifas", method: .get, headers: headers )
+                .validate()
+                .responseJSON{ response in
+                    guard response.error == nil else {
+                        //TODO  error
+                        print("error request: \(response.error!)")
+                        return
+                    }
+                    if let tarifas = response.result.value as! NSArray? {
+                        for tarifa in tarifas{
+                            let data = tarifa as! NSDictionary
+                            DispatchQueue.main.async {
+                                self.tarifas.append(Tarifa(id:data["id"] as! Int, tarifa: data["rate"] as! Int, desde: data["from"] as! String, hasta: data["to"] as! String ))
+                                self.tarifasTableView.reloadData()
+                            }
+                            
                         }
                         
                     }
-                    
-                }
-                
+            }
         }
         
         

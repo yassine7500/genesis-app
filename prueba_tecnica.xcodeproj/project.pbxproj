@@ -17,6 +17,7 @@
 		C244DBD322CE593300A04FBA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C244DBD122CE593300A04FBA /* Main.storyboard */; };
 		C244DBD522CE593600A04FBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C244DBD422CE593600A04FBA /* Assets.xcassets */; };
 		C244DBD822CE593600A04FBA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C244DBD622CE593600A04FBA /* LaunchScreen.storyboard */; };
+		C27C247222D40C6A000D7DF4 /* TarifaCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27C247122D40C6A000D7DF4 /* TarifaCreateViewController.swift */; };
 		C2A9061322CF774D00FFE288 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A9061222CF774D00FFE288 /* User.swift */; };
 		C2A9061722CFFA2700FFE288 /* CategoryCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A9061622CFFA2700FFE288 /* CategoryCreateViewController.swift */; };
 		C2A9061922D0BCDF00FFE288 /* CategoryShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A9061822D0BCDF00FFE288 /* CategoryShowView.swift */; };
@@ -46,6 +47,7 @@
 		C244DBD422CE593600A04FBA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C244DBD722CE593600A04FBA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C244DBD922CE593600A04FBA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C27C247122D40C6A000D7DF4 /* TarifaCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TarifaCreateViewController.swift; sourceTree = "<group>"; };
 		C2A9061222CF774D00FFE288 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		C2A9061622CFFA2700FFE288 /* CategoryCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCreateViewController.swift; sourceTree = "<group>"; };
 		C2A9061822D0BCDF00FFE288 /* CategoryShowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryShowView.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				C2F836F922D3AE3900C75235 /* ImageCollectionViewCell.swift */,
 				C2F836FD22D3BB6900C75235 /* TarifasTableViewCell.swift */,
 				C2F8370322D3C3E300C75235 /* Tarifa.swift */,
+				C27C247122D40C6A000D7DF4 /* TarifaCreateViewController.swift */,
 			);
 			path = prueba_tecnica;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 			files = (
 				C2F836FA22D3AE3900C75235 /* ImageCollectionViewCell.swift in Sources */,
 				C2F836F822D3973B00C75235 /* ImagesCollectionViewController.swift in Sources */,
+				C27C247222D40C6A000D7DF4 /* TarifaCreateViewController.swift in Sources */,
 				C2134F9E22CE9001000865C6 /* CategoryTableView.swift in Sources */,
 				C244DBD022CE593300A04FBA /* ViewController.swift in Sources */,
 				C2A9062622D11F0A00FFE288 /* ProductCategoryTableViewController.swift in Sources */,

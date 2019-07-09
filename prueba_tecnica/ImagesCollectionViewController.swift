@@ -11,10 +11,7 @@ import Alamofire
 
 
 private let reuseIdentifier = "ImageCell"
-private let sectionInsets = UIEdgeInsets(top: 50.0,
-                                         left: 20.0,
-                                         bottom: 50.0,
-                                         right: 20.0)
+
 
 class ImagesCollectionViewController: UICollectionViewController {
 
@@ -22,6 +19,11 @@ class ImagesCollectionViewController: UICollectionViewController {
     public var productImages:[String] = []
     private let def = UserDefaults.standard
     private var images:[UIImage]?
+    var selectedCategories = [Int]()
+    var mode:String?
+    var tarifas = [Tarifa]()
+    
+    
     
     private func alamoGetImages(){
         
@@ -55,15 +57,17 @@ class ImagesCollectionViewController: UICollectionViewController {
 
     }
 
-    /*
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
+        guard let productCreateView = segue.destination as? ProductCreateView else{
+            fatalError("Error instancia")
+        }
+        productCreateView.product = self.product
+        productCreateView.selectedCategories = selectedCategories
+        productCreateView.mode = mode;
     }
-    */
+
 
     // MARK: UICollectionViewDataSource
 
