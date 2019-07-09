@@ -226,6 +226,7 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
             }
             pcVC.categories = categories
             pcVC.selectedCategories = selectedCategories
+            pcVC.tarifas = tarifas
             
             //Si estamos en la vista de crear
             //pasaremos un product temporal a categorias

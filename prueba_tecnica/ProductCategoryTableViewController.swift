@@ -11,6 +11,7 @@ import UIKit
 class ProductCategoryTableViewController: UITableViewController {
 
     var categories = [Category]()
+    var tarifas = [Tarifa]()
     var selectedCategories = [Int]()
     var product:Product?
     var mode:String?
@@ -73,6 +74,7 @@ class ProductCategoryTableViewController: UITableViewController {
             createProductVC.categories = self.categories
             createProductVC.product = self.product
             createProductVC.mode = self.mode
+            createProductVC.tarifas = self.tarifas
         }
     }
 

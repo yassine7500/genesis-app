@@ -25,8 +25,7 @@ class ImagesCollectionViewController: UICollectionViewController {
     
     
     
-    private func alamoGetImages(){
-        
+    private func alamoGetImages(){        
         if(mode != "CREATE"){
             let headers: HTTPHeaders = [
                 "Authorization": def.string(forKey: "token")!
@@ -53,9 +52,6 @@ class ImagesCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         alamoGetImages()
-
-        
-
     }
 
     // MARK: - Navigation
