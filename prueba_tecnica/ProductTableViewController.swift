@@ -36,14 +36,12 @@ class ProductTableViewController: UITableViewController {
                         self.products.append(Product(id:data["id"] as! Int, code: data["code"] as! String, name: data["name"] as! String, description: data["description"] as! String, thumbnail: data["thumbnail"] as? String))
                         //refrescamos la tabla cuando tengamos los productos
                         self.tableView.reloadData()
-                        print(products.count)
                     }
                 }
         }
     }
     
     override func viewDidLoad() {
-        print("productos didload")
         super.viewDidLoad()
         loadProducts()
     }

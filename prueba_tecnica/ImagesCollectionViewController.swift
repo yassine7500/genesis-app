@@ -27,24 +27,25 @@ class ImagesCollectionViewController: UICollectionViewController {
     
     private func alamoGetImages(){
         
-        let headers: HTTPHeaders = [
-            "Authorization": def.string(forKey: "token")!
-        ]
-        Alamofire.request("http://genesis.test/api/productos/\(self.product!.id)/imagenes", method: .get, headers: headers )
-            .validate()
-            .responseJSON{ response in
-                guard response.error == nil else {
-                    //TODO  error
-                    return
-                }
-                if let cats = response.result.value as! NSArray? {
-                    for category in cats{
-                        let data = category as! NSDictionary
-                        self.productImages.append("http://genesis.test/\(data["url"]!)")
+        if(mode != "CREATE"){
+            let headers: HTTPHeaders = [
+                "Authorization": def.string(forKey: "token")!
+            ]
+            Alamofire.request("http://genesis.test/api/productos/\(self.product!.id)/imagenes", method: .get, headers: headers )
+                .validate()
+                .responseJSON{ response in
+                    guard response.error == nil else {
+                        //TODO  error
+                        return
                     }
-                }
-                self.collectionView.reloadData()
-                
+                    if let cats = response.result.value as! NSArray? {
+                        for category in cats{
+                            let data = category as! NSDictionary
+                            self.productImages.append("http://genesis.test/\(data["url"]!)")
+                        }
+                    }
+                    self.collectionView.reloadData()
+            }
         }
         
     }
@@ -66,6 +67,7 @@ class ImagesCollectionViewController: UICollectionViewController {
         productCreateView.product = self.product
         productCreateView.selectedCategories = selectedCategories
         productCreateView.mode = mode;
+        productCreateView.tarifas = tarifas
     }
 
 
