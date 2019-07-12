@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class CategoryCreateViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
+class CategoryCreateViewController: UIViewController{
     
     //MARK: properties
     @IBOutlet weak var codeInput: UITextField!
@@ -23,16 +23,17 @@ class CategoryCreateViewController: UIViewController, UITextFieldDelegate, UITex
     let def = UserDefaults.standard
     
     override func viewDidLoad() {
-        codeInput.delegate = self
-        nameInput.delegate = self
-        descriptionInput.delegate = self
+       super.viewDidLoad()
     }
     
-    //MARK: TextInputDelegate
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        //escoder teclado
-        textField.resignFirstResponder()
-        return true;
+    func validate(){
+        let errorString = "Este campo es requerido";
+        if(self.nameInput.text!.count < 1 || self.nameInput.text!.count > 255 || self.codeInput.text!.count < 1 || self.codeInput.text!.count > 255){
+            self.nameErrorLabel.text = errorString
+            self.nameErrorLabel.isHidden = false
+            self.codeErrorLabel.text = errorString
+            self.codeErrorLabel.isHidden = false
+        }
     }
     
     
@@ -40,20 +41,7 @@ class CategoryCreateViewController: UIViewController, UITextFieldDelegate, UITex
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         //comprobamos los datos
-        if(identifier == "SaveCategory"){
-            let errorString = "Este campo es requerido";
-            if(self.nameInput.text!.count < 1 || self.nameInput.text!.count > 255 || self.codeInput.text!.count < 1 || self.codeInput.text!.count > 255){
-                self.nameErrorLabel.text = errorString
-                self.nameErrorLabel.isHidden = false
-                self.codeErrorLabel.text = errorString
-                self.codeErrorLabel.isHidden = false
-                return false;
-            }
-        }
-        
-        let headers: HTTPHeaders = [
-            "Authorization": def.string(forKey: "token")!
-        ]
+        validate()
         
         let parameters: Parameters = [
              "user_id": self.def.integer(forKey: "userID"),
@@ -62,18 +50,12 @@ class CategoryCreateViewController: UIViewController, UITextFieldDelegate, UITex
              "description": self.descriptionInput.text!
         ]
         
-        //todo ok, vamos a guardar la categoría en la BD
-        Alamofire.request("http://genesis.test/api/categorias", method: .post, parameters: parameters, headers: headers )
-            .validate()
-            .responseJSON{ response in
-                guard response.error == nil else {
-                    //TODO  error
-                    print(response.error!)
-                    return
-                }
-                //vamos a la siguiente vista
-                self.performSegue(withIdentifier: "SaveCategory", sender: self)
-        }
+        Api.instance.alamoRequest(resource: "categorias", parameters: parameters, method: .post, onSuccess: { (data) in
+            self.performSegue(withIdentifier: "SaveCategory", sender: self)
+        }, onFail: {
+            print("error del servidor")
+        })
+        
         return false;
     }
     

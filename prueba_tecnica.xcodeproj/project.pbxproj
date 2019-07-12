@@ -17,6 +17,7 @@
 		C244DBD322CE593300A04FBA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C244DBD122CE593300A04FBA /* Main.storyboard */; };
 		C244DBD522CE593600A04FBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C244DBD422CE593600A04FBA /* Assets.xcassets */; };
 		C244DBD822CE593600A04FBA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C244DBD622CE593600A04FBA /* LaunchScreen.storyboard */; };
+		C276C04022D768DB00118B53 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = C276C03F22D768DB00118B53 /* Api.swift */; };
 		C27C247222D40C6A000D7DF4 /* TarifaCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27C247122D40C6A000D7DF4 /* TarifaCreateViewController.swift */; };
 		C2A9061322CF774D00FFE288 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A9061222CF774D00FFE288 /* User.swift */; };
 		C2A9061722CFFA2700FFE288 /* CategoryCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A9061622CFFA2700FFE288 /* CategoryCreateViewController.swift */; };
@@ -47,6 +48,7 @@
 		C244DBD422CE593600A04FBA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C244DBD722CE593600A04FBA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C244DBD922CE593600A04FBA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C276C03F22D768DB00118B53 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		C27C247122D40C6A000D7DF4 /* TarifaCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TarifaCreateViewController.swift; sourceTree = "<group>"; };
 		C2A9061222CF774D00FFE288 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		C2A9061622CFFA2700FFE288 /* CategoryCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCreateViewController.swift; sourceTree = "<group>"; };
@@ -114,30 +116,31 @@
 		C244DBCC22CE593300A04FBA /* prueba_tecnica */ = {
 			isa = PBXGroup;
 			children = (
+				C276C03F22D768DB00118B53 /* Api.swift */,
+				C2A9061222CF774D00FFE288 /* User.swift */,
 				C244DBCD22CE593300A04FBA /* AppDelegate.swift */,
 				C244DBCF22CE593300A04FBA /* ViewController.swift */,
 				C2134F7922CE71D3000865C6 /* HomeViewController.swift */,
-				C2134F9922CE8E6A000865C6 /* CategoryTableViewCell.swift */,
 				C244DBD122CE593300A04FBA /* Main.storyboard */,
-				C2A9061622CFFA2700FFE288 /* CategoryCreateViewController.swift */,
-				C244DBD422CE593600A04FBA /* Assets.xcassets */,
 				C244DBD622CE593600A04FBA /* LaunchScreen.storyboard */,
 				C244DBD922CE593600A04FBA /* Info.plist */,
-				C2134F9D22CE9001000865C6 /* CategoryTableView.swift */,
 				C2134F9F22CE911A000865C6 /* Category.swift */,
-				C2A9061222CF774D00FFE288 /* User.swift */,
 				C2A9061822D0BCDF00FFE288 /* CategoryShowView.swift */,
-				C2A9061D22D0F52D00FFE288 /* ProductTableViewCell.swift */,
+				C2134F9D22CE9001000865C6 /* CategoryTableView.swift */,
+				C2A9061622CFFA2700FFE288 /* CategoryCreateViewController.swift */,
+				C2134F9922CE8E6A000865C6 /* CategoryTableViewCell.swift */,
 				C2A9061B22D0F33100FFE288 /* Product.swift */,
-				C2A9061F22D0F7AD00FFE288 /* ProductTableViewController.swift */,
 				C2A9062122D1006E00FFE288 /* ProductCreateView.swift */,
+				C2A9061F22D0F7AD00FFE288 /* ProductTableViewController.swift */,
+				C2A9061D22D0F52D00FFE288 /* ProductTableViewCell.swift */,
 				C2A9062322D11D5A00FFE288 /* ProductCategoryTableViewCell.swift */,
 				C2A9062522D11F0A00FFE288 /* ProductCategoryTableViewController.swift */,
 				C2F836F722D3973B00C75235 /* ImagesCollectionViewController.swift */,
 				C2F836F922D3AE3900C75235 /* ImageCollectionViewCell.swift */,
-				C2F836FD22D3BB6900C75235 /* TarifasTableViewCell.swift */,
 				C2F8370322D3C3E300C75235 /* Tarifa.swift */,
+				C2F836FD22D3BB6900C75235 /* TarifasTableViewCell.swift */,
 				C27C247122D40C6A000D7DF4 /* TarifaCreateViewController.swift */,
+				C244DBD422CE593600A04FBA /* Assets.xcassets */,
 			);
 			path = prueba_tecnica;
 			sourceTree = "<group>";
@@ -251,6 +254,7 @@
 				C2F836FE22D3BB6900C75235 /* TarifasTableViewCell.swift in Sources */,
 				C2A9061922D0BCDF00FFE288 /* CategoryShowView.swift in Sources */,
 				C2F8370422D3C3E300C75235 /* Tarifa.swift in Sources */,
+				C276C04022D768DB00118B53 /* Api.swift in Sources */,
 				C2134FA022CE911A000865C6 /* Category.swift in Sources */,
 				C2A9062222D1006E00FFE288 /* ProductCreateView.swift in Sources */,
 				C2A9061E22D0F52D00FFE288 /* ProductTableViewCell.swift in Sources */,

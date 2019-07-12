@@ -13,15 +13,18 @@ import Alamofire
 private let reuseIdentifier = "ImageCell"
 
 
-class ImagesCollectionViewController: UICollectionViewController {
-
+class ImagesCollectionViewController: UICollectionViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    
+    //MARK: properties
     public var product:Product?
     public var productImages:[String] = []
     private let def = UserDefaults.standard
-    private var images:[UIImage]?
+    @IBOutlet weak var imageView: UIImageView!
+    private var images = [UIImage]()
     var selectedCategories = [Int]()
     var mode:String?
     var tarifas = [Tarifa]()
+    var imagePicker = UIImagePickerController()
     
     
     
@@ -37,10 +40,20 @@ class ImagesCollectionViewController: UICollectionViewController {
                         //TODO  error
                         return
                     }
-                    if let cats = response.result.value as! NSArray? {
-                        for category in cats{
-                            let data = category as! NSDictionary
+                    if let images = response.result.value as! NSArray? {
+                        for image in images{
+                            let data = image as! NSDictionary
                             self.productImages.append("http://genesis.test/\(data["url"]!)")
+                        }
+                    }
+                    
+                    for pi in self.productImages {
+                        do{
+                            let url = URL(string: pi)!
+                            let data = try Data(contentsOf: url)
+                            self.images.append(UIImage(data: data)!)
+                        }catch{
+                            print(error)
                         }
                     }
                     self.collectionView.reloadData()
@@ -65,7 +78,30 @@ class ImagesCollectionViewController: UICollectionViewController {
         productCreateView.mode = mode;
         productCreateView.tarifas = tarifas
     }
-
+    
+    //MARK: Actions
+    @IBAction func addImagePressed(_ sender: Any) {
+        //mostramos el imagepicker para que el usuario pueda elegir
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.allowsEditing = false
+        
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    //MARK: image picker
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        
+        images.append(image)
+        picker.dismiss(animated: true, completion: nil)
+        
+        print("images\(images)")
+        collectionView.reloadData()
+        
+    }
+    
 
     // MARK: UICollectionViewDataSource
 
@@ -76,7 +112,7 @@ class ImagesCollectionViewController: UICollectionViewController {
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return productImages.count
+        return images.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -84,7 +120,12 @@ class ImagesCollectionViewController: UICollectionViewController {
             fatalError("la clase de la celda no es correcta")
         }
         
-        // Configure the cell
+        
+        
+        cell.productImage.image = images[indexPath.row] 
+        cell.contentView.addSubview(cell.productImage)
+        
+        /* Configure the cell
         do {
             let url = URL(string: productImages[indexPath.row])!
             let data = try Data(contentsOf: url)
@@ -92,40 +133,8 @@ class ImagesCollectionViewController: UICollectionViewController {
         }
         catch{
             print(error)
-        }
+        }*/
     
         return cell
     }
-
-    // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    
-    }
-    */
-
 }

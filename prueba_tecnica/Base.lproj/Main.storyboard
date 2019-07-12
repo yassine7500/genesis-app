@@ -107,7 +107,6 @@
                                 <rect key="frame" x="50" y="382" width="314" height="30"/>
                                 <state key="normal" title="Categorías"/>
                                 <connections>
-                                    <action selector="categoriesPressed:" destination="cy6-Fx-bME" eventType="touchUpInside" id="UEQ-YV-OWO"/>
                                     <segue destination="Ns7-Yo-hu8" kind="presentation" identifier="GoCategoriesTable" id="CAF-pR-yGo"/>
                                 </connections>
                             </button>
@@ -179,7 +178,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Image" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fZg-A6-lqP">
-                                            <rect key="frame" x="0.0" y="0.0" width="122" height="114"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="156" height="120"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                     </subviews>
@@ -508,9 +507,14 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" id="0kD-mC-GcF">
-                        <barButtonItem key="rightBarButtonItem" title="Ok" id="3oU-81-93Y">
+                        <barButtonItem key="leftBarButtonItem" title="Ok" id="3oU-81-93Y">
                             <connections>
                                 <segue destination="56V-46-3kL" kind="presentation" modalTransitionStyle="crossDissolve" id="D1K-ib-v1z"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="Tdv-nU-hUF">
+                            <connections>
+                                <action selector="addImagePressed:" destination="BXU-TY-h0r" id="wcW-5s-VRj"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -982,9 +986,10 @@
         <image name="Image" width="320" height="320"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="PUf-a9-Jcr"/>
+        <segue reference="Ftm-ME-UIS"/>
+        <segue reference="jLd-jh-Hjl"/>
         <segue reference="CAF-pR-yGo"/>
-        <segue reference="Lyw-VT-aqX"/>
-        <segue reference="KaM-9L-fLe"/>
+        <segue reference="D1K-ib-v1z"/>
+        <segue reference="HUm-GM-rnH"/>
     </inferredMetricsTieBreakers>
 </document>

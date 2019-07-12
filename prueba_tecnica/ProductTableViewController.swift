@@ -14,32 +14,6 @@ class ProductTableViewController: UITableViewController {
     //MARK: properties
     var products = [Product]()
     var categories = [Category]()
-    let def = UserDefaults.standard
-    
-    //MARK:methods
-    
-    private func loadProducts(){
-        //load products desde la api
-        let headers: HTTPHeaders = [
-            "Authorization": def.string(forKey: "token")!
-        ]
-        Alamofire.request("http://genesis.test/api/productos", headers: headers )
-            .validate()
-            .responseJSON{ response in
-                guard response.error == nil else {
-                    print(response.error)
-                    return
-                }
-                if let products = response.result.value as! NSArray? {
-                    for product in products{
-                        let data = product as! NSDictionary
-                        self.products.append(Product(id:data["id"] as! Int, code: data["code"] as! String, name: data["name"] as! String, description: data["description"] as! String, thumbnail: data["thumbnail"] as? String))
-                        //refrescamos la tabla cuando tengamos los productos
-                        self.tableView.reloadData()
-                    }
-                }
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,94 +64,37 @@ class ProductTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             //API DELETE request para borrar la categoría de la base de datos
-            let headers: HTTPHeaders = [
-                "Authorization": def.string(forKey: "token")!
-            ]
-            Alamofire.request("http://genesis.test/api/productos/\(self.products[indexPath.row].id)", method: .delete, headers: headers )
-                .validate()
-                .responseJSON{ response in
-                    guard response.error == nil else {
-                        //TODO  error
-                        print(response.request)
-                        return
-                    }
-            }
-            // Borrar el row de la tabla
-            self.products.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            tableView.reloadData()
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+            Api.instance.alamoRequest(resource: "productos/\(products[indexPath.row].id)", parameters: nil, method: .delete, onSuccess: { (response) in
+                // Borrar el row de la tabla
+                self.products.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                tableView.reloadData()
+            }, onFail: {print("no se ha podido eliminar el producto")})
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         if(segue.identifier == "CreateProduct"){
             //activamos el modo crear nuevo producto
             let createProductVC = segue.destination as! ProductCreateView
             createProductVC.mode = "CREATE"
         }
-        
-        /*if(segue.identifier == "CreateProduct" || segue.identifier == "ShowProduct"){
-            let headers: HTTPHeaders = [
-                "Authorization": def.string(forKey: "token")!
-            ]
-            Alamofire.request("http://genesis.test/api/categorias", method: .get, headers: headers )
-                .validate()
-                .responseJSON{ response in
-                    guard response.error == nil else {
-                        //TODO  error
-                        print("error request: \(response.error!)")
-                        return
-                    }
-                    if let cats = response.result.value as! NSArray? {
-                        for category in cats{
-                            let data = category as! NSDictionary
-                            self.categories.append(Category(id:data["id"] as! Int, code: data["code"] as! String, name: data["name"] as! String, description: data["description"] as! String))
-                        }
-                    }
-                    
-                    //pasamos las categorias a la vista de crear/ver product
-                    let createProductVC = segue.destination as! ProductCreateView
-                    createProductVC.categories =   self.categories
-                    
-                    //si estamos intentando ver el producto,
-                    //pasaremos el producto, y sus categorias seleccionadas
-                    if(segue.identifier == "ShowProduct"){
-                        guard let cell = sender as? UITableViewCell else{
-                            print("no se puede acceder porque el sender es diferente a celda")
-                            return
-                        }
-                        guard let indexPath = self.tableView.indexPath(for: cell) else {
-                            fatalError("cleda incorrecta")
-                        }
-                        //id del product seleccionado
-                        createProductVC.product = self.products[indexPath.row]
-                        
-                        //las categorias seleccionadas del producto
-                        Alamofire.request("http://genesis.test/api/productos/\(self.products[indexPath.row].id)/categorias", method: .get, headers: headers )
-                            .validate()
-                            .responseJSON{ response in
-                                guard response.error == nil else {
-                                    //TODO  error
-                                    return
-                                }
-                                if let cats = response.result.value as! NSArray? {
-                                    var selected = [Int]()
-                                    for category in cats{
-                                        let data = category as! NSDictionary
-                                        selected.append(data["id"] as! Int)
-                                    }
-                                    createProductVC.selectedCategories = selected
-                                    createProductVC.selectedCount.text = "\(selected.count) seleccionados"
-                                    createProductVC.modeShow()
-                                }
-                        }
-                    }
-                    
+    }
+    
+    //MARK:methods
+    
+    private func loadProducts(){
+        //load products desde la api
+        Api.instance.alamoRequest(resource: "productos", parameters: nil, method: .get, onSuccess: { (response) in
+            guard let products = response as! NSArray? else{
+                fatalError("Productos recibidos no son NSArray")
             }
-        }*/
+            for product in products{
+                let data = product as! NSDictionary
+                self.products.append(Product(id:data["id"] as! Int, code: data["code"] as! String, name: data["name"] as! String, description: data["description"] as! String, thumbnail: data["thumbnail"] as? String))
+                self.tableView.reloadData()
+            }
+        }, onFail: {print("Error al recibir productos")})
     }
     
     

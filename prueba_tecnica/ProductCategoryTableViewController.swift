@@ -36,16 +36,13 @@ class ProductCategoryTableViewController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProductCategoriesCell", for: indexPath) as? ProductCategoryTableViewCell else{
             fatalError("celda incorrecta")
         }
-        // Configure the cell...
         cell.nameLabel.text = categories[indexPath.row].name
         //si la categoria a mostrar esta en la lista de las categorias seleccionadas
-
         return cell
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         //cambiamos el estado de la celda a seleccionado
-        
         for sc in selectedCategories{
             if(sc == categories[indexPath.row].id){
                 tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableView.ScrollPosition.none)

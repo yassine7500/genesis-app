@@ -42,25 +42,24 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
         self.tarifasTableView.delegate = self
         self.tarifasTableView.dataSource = self
         
+        //siempre cargamos una lista de las categorías publicadas
         loadAllCategories()
-        loadTarifas()
         
         switch mode {
         case "SHOW":
-            modeShow(); break
+            modeShow()
         case "EDIT":
-            modeEdite(); break;
+            modeEdite()
         case "CREATE":
-            modeCreate(); break;
+            modeCreate()
         default:
-            modeEdite(); break;
+            modeEdite()
         }
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        if product != nil {
-            //si tenemos un producto, significa que estamos mostrando/editando
+        if product != nil ||  product?.id != 0 {
             nameInput.text = product?.name
             codeInput.text = product?.code
             descriptionInput.text = product?.description
@@ -70,7 +69,6 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
             mode = "CREATE"
         }
         
-        //mostramos numero de categorias seleccionadas
         selectedCount.text = "\(selectedCategories.count) seleccionadas"
     }
     
@@ -106,29 +104,21 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
-        //permitir borrar y editar solo en modo editar
         if self.mode == "EDIT" {
-            let headers: HTTPHeaders = [
-                "Authorization": def.string(forKey: "token")!
-            ]
-            Alamofire.request("http://genesis.test/api/tarifas/\(tarifas[indexPath.row].id)", method: .delete, headers: headers )
-                .validate()
-                .responseJSON{ response in
-                    guard response.error == nil else {
-                        //TODO  error
-                        print(response.request)
-                        return
-                    }
-                    // Borrar el row de la tabla
-                    self.tarifas.remove(at: indexPath.row)
-                    tableView.deleteRows(at: [indexPath], with: .fade)
-                    tableView.reloadData()
+            Api.instance.alamoRequest(resource: "tarifas/\(tarifas[indexPath.row].id)", parameters: nil, method: .delete, onSuccess: { (response) in
+                // Borrar el row de la tabla
+                self.tarifas.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                tableView.reloadData()
+            }) {
+                print("error al borrar tarifa")
             }
         }
+        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //editamos la tarifa
+        //editamos la tarifa pulsada
         if(saveButton.title == "Actualizar"){
             tarifaToEdit = tarifas[indexPath.row]
             performSegue(withIdentifier: "CreateTarifa", sender: "EditTarifa")
@@ -148,6 +138,7 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
                 fatalError("esto no debe pasar");
             }
             
+            //validacion
             let errorString = "Este campo es requerido";
             if(self.nameInput.text!.count < 1 || self.nameInput.text!.count > 255 || self.codeInput.text!.count < 1 || self.codeInput.text!.count > 255){
                 self.nameErrorLabel.text = errorString
@@ -161,10 +152,6 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
             for tarifa in self.tarifas{
                 tarifasPreparadas.append(["id":String(tarifa.id), "rate":String(tarifa.tarifa),"from":tarifa.desde,"to":tarifa.hasta])
             }
-            
-            let headers: HTTPHeaders = [
-                "Authorization": def.string(forKey: "token")!
-            ]
             let parameters: Parameters = [
                 "code": self.codeInput.text!,
                 "name":  self.nameInput.text!,
@@ -175,48 +162,35 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
             
             if(button.title == "Guardar"){
                 //Post guardar nuevo producto
-                Alamofire.request("http://genesis.test/api/productos", method: .post, parameters: parameters,encoding: JSONEncoding.default, headers: headers )
-                    .validate()
-                    .responseJSON{ response in
-                        guard response.error == nil else {
-                            print(response.error)
-                            return
-                        }
-                        
-                        //actualizado sin errores, mostramos success y cambiamos el estado de la vista
-                        self.successLabel.text = "Producto Creado correctamente"
-                        self.successLabel.isHidden = false
+                Api.instance.alamoRequest(resource: "productos", parameters: parameters, method: .post, onSuccess: { (response) in
+                    self.successLabel.text = "Producto Creado correctamente"
+                    self.successLabel.isHidden = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                         self.performSegue(withIdentifier: "SavedProduct", sender: self)
-                }
-                return false
+                    })
+                }, onFail: {print("error al crear producto")})
             }
             
             if(button.title == "Actualizar"){
-                print("Actualizando producto")
-                //PUT actualizar producto en la api
-                Alamofire.request("http://genesis.test/api/productos/\(self.product!.id)", method: .put, parameters: parameters, encoding: JSONEncoding.default, headers: headers )
-                    .validate()
-                    .responseJSON{ response in
-                        guard response.error == nil else {
-                            print(response.error)
-                            return
-                        }
-                        //actualizado sin errores, mostramos success y cambiamos el estado de la vista
-                        self.successLabel.text = "Producto actualizado correctamente"
-                        self.successLabel.isHidden = false
-                        self.modeShow()
-                        print(response.result.value)
+                Api.instance.alamoRequest(resource: "productos/\(self.product!.id)", parameters: parameters, method: .put, encoding: JSONEncoding.default, onSuccess: { (response) in
+                    self.successLabel.text = "Producto actualizado correctamente"
+                    self.successLabel.isHidden = false
+                    self.modeShow()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                        self.performSegue(withIdentifier: "SavedProduct", sender: self)
+                    })
+                }) {
+                    print("Error al actualizar el producto")
                 }
-                return false;
             }
             
             if(button.title == "Editar"){
                 modeEdite()
-                return false
             }
+            return false
         }
-        //vamos a la lista de productos creados
         return true
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -224,10 +198,11 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
             guard let pcVC = segue.destination as? ProductCategoryTableViewController else{
                 fatalError("instancia incorrecta del segue")
             }
+            
+            pcVC.mode = mode
             pcVC.categories = categories
             pcVC.selectedCategories = selectedCategories
             pcVC.tarifas = tarifas
-            
             //Si estamos en la vista de crear
             //pasaremos un product temporal a categorias
             //para guardar los datos introducidos
@@ -236,11 +211,9 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
             }else{
                 pcVC.product = product
             }
-            pcVC.mode = mode
         }
         
         if segue.identifier == "ShowImages" {
-            
             guard let nVC = segue.destination as? UINavigationController else{
                 fatalError("error instancia")
             }
@@ -257,16 +230,21 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
         //preparando segue para crear/editar tarifa
         if segue.identifier == "CreateTarifa" {
             guard let t = segue.destination as? UINavigationController else{
-                fatalError("el destino no es un navigarionvc")
+                fatalError("el destino no es un UINavigationController")
             }
             guard let ctVC = t.topViewController as? TarifaCreateViewController else{
-                fatalError("el top que sigue al nav no es un uiviucontroller")
+                fatalError("el top que sigue al nav no es un TarifaCreateViewController")
             }
+            
+            //Si la vista actual no tiene un producto (solo ocurre en el modo crear)
+            //creamos un producto que sirve de placeholder para guardar los datos introducido hasta el momento
             if product == nil || product?.id == 0 {
                 ctVC.product = Product(id: 0, code: codeInput.text!, name: nameInput.text!, description: descriptionInput.text!, thumbnail: nil)
             }else{
                 ctVC.product = product
             }
+            
+            //dependiendo del sender, mostramos la vista de editar/crear tarifa
             if (sender as! String == "EditTarifa"){
                 ctVC.tarifaMode = "Edit"
                 ctVC.tarifa = tarifaToEdit
@@ -274,8 +252,8 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
                 ctVC.tarifaMode = "CREATE"
             }
             ctVC.tarifas = tarifas
-            ctVC.mode = self.mode
-            ctVC.selectedCategories = self.selectedCategories
+            ctVC.mode = mode
+            ctVC.selectedCategories = selectedCategories
             
         }
     }
@@ -293,29 +271,9 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
         addTarifa.isHidden = true
         addTarifa.isEnabled = false
         
-        //obtenemos las categorias seleccionadas en caso del modo show o edit
-        let headers: HTTPHeaders = [
-            "Authorization": def.string(forKey: "token")!
-        ]
-        Alamofire.request("http://genesis.test/api/productos/\(self.product!.id)/categorias", method: .get, headers: headers )
-            .validate()
-            .responseJSON{ response in
-                guard response.error == nil else {
-                    //TODO  error
-                    return
-                }
-                if let cats = response.result.value as! NSArray? {
-                    for category in cats{
-                        let data = category as! NSDictionary
-                        DispatchQueue.main.async {
-                            if self.selectedCategories.contains(data["id"] as! Int) == false{
-                                self.selectedCategories.append(data["id"] as! Int)
-                            }
-                            self.selectedCount.text = "\(self.selectedCategories.count) seleccionados"
-                        }
-                    }
-                }
-        }
+        //cargamos tarifas del producto
+        loadTarifas()
+        loadProductCategories()
     }
     
     public func modeEdite(){
@@ -329,6 +287,9 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
         //mostrar boton para añadir tarifa
         addTarifa.isHidden = false
         addTarifa.isEnabled = true
+        
+        //cargamos tarifas del producto
+        loadTarifas()
     }
     
     public func modeCreate(){
@@ -344,62 +305,62 @@ class ProductCreateView: UIViewController, UITableViewDataSource, UITableViewDel
         addTarifa.isEnabled = true
     }
     
+    //cargamos las tarifas de un producto en el modo editar y ver
     public func loadTarifas(){
-        if tarifas.isEmpty {
-            let headers: HTTPHeaders = [
-                "Authorization": def.string(forKey: "token")!
-            ]
-            //hacemos un request para obtener todas las categorias una vez
-            
-            if mode != "CREATE" {
-                Alamofire.request("http://genesis.test/api/productos/\(product!.id)/tarifas", method: .get, headers: headers )
-                    .validate()
-                    .responseJSON{ response in
-                        guard response.error == nil else {
-                            //TODO  error
-                            print("error request: \(response.error!)")
-                            return
+        if tarifas.isEmpty && mode != "CREATE"{
+            Api.instance.alamoRequest(resource: "productos/\(product!.id)/tarifas", method: .get, onSuccess: { (response) in
+                if let tarifas = response as! NSArray? {
+                    for tarifa in tarifas{
+                        let data = tarifa as! NSDictionary
+                        DispatchQueue.main.async {
+                            self.tarifas.append(Tarifa(id:data["id"] as! Int, tarifa: data["rate"] as! Int, desde: data["from"] as! String, hasta: data["to"] as! String ))
+                            self.tarifasTableView.reloadData()
                         }
-                        if let tarifas = response.result.value as! NSArray? {
-                            for tarifa in tarifas{
-                                let data = tarifa as! NSDictionary
-                                DispatchQueue.main.async {
-                                    self.tarifas.append(Tarifa(id:data["id"] as! Int, tarifa: data["rate"] as! Int, desde: data["from"] as! String, hasta: data["to"] as! String ))
-                                    self.tarifasTableView.reloadData()
-                                }
-                                
-                            }
-                        }
-                        
+                    }
                 }
+            }) {
+                print("error al cargar las tarifas del producto")
             }
         }
     }
     
     private func loadAllCategories(){
-        let headers: HTTPHeaders = [
-            "Authorization": def.string(forKey: "token")!
-        ]
-        //hacemos un request para obtener todas las categorias una vez
+        
         if categories.isEmpty {
-            Alamofire.request("http://genesis.test/api/categorias", method: .get, headers: headers )
-                .validate()
-                .responseJSON{ response in
-                    guard response.error == nil else {
-                        //TODO  error
-                        print("error request: \(response.error!)")
-                        return
-                    }
-                    if let cats = response.result.value as! NSArray? {
-                        for category in cats{
-                            let data = category as! NSDictionary
-                            DispatchQueue.main.async {
-                                self.categories.append(Category(id:data["id"] as! Int, code: data["code"] as! String, name: data["name"] as! String, description: data["description"] as! String))
-                            }
+            Api.instance.alamoRequest(resource: "categorias", method: .get, onSuccess: { (response) in
+                if let cats = response as! NSArray? {
+                    for category in cats{
+                        let data = category as! NSDictionary
+                        DispatchQueue.main.async {
+                            self.categories.append(Category(id:data["id"] as! Int, code: data["code"] as! String, name: data["name"] as! String, description: data["description"] as! String))
                         }
                     }
+                }
+            }) {
+                print("error al cargar todas las categorias")
             }
         }
+        
+    }
+    
+    private func loadProductCategories(){
+        //obtenemos las categorias seleccionadas en caso del modo show o edit
+        Api.instance.alamoRequest(resource: "productos/\(self.product!.id)/categorias", method: .get, onSuccess: { (response) in
+            guard let categories = response as! NSArray? else {
+                fatalError("las categorias recibidas no están del tipo NSArray")
+            }
+            for category in categories{
+                let data = category as! NSDictionary
+                DispatchQueue.main.async {
+                    if self.selectedCategories.contains(data["id"] as! Int) == false{
+                        self.selectedCategories.append(data["id"] as! Int)
+                    }
+                    self.selectedCount.text = "\(self.selectedCategories.count) seleccionados"
+                }
+            }
+            
+            
+        }, onFail: {print("error al listar las categorías de un producto")})
     }
 }
 
